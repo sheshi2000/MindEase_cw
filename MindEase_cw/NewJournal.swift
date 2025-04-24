@@ -9,9 +9,11 @@ import SwiftUI
 
 struct JournalEntryView: View {
     @State private var journalText = ""
+    @State private var detectedMood = ""
     @State private var selectedTab: String = "plus.circle.fill"
     @State private var isEditing: Bool = false
     @State private var hasTextChanged: Bool = false
+    @State private var showSavedAlert = false
 
     private let bottomIcons: [String] = ["house.fill", "list.bullet", "plus.circle.fill", "star", "chart.bar"]
 
@@ -88,6 +90,13 @@ struct JournalEntryView: View {
                                 .onChange(of: journalText) { newValue in
                                     hasTextChanged = !newValue.isEmpty
                                 }
+
+                            if !detectedMood.isEmpty {
+                                Text("Detected Mood: \(detectedMood)")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(.gray)
+                                    .padding(.top, 8)
+                            }
                         }
                         .padding(.horizontal)
 
@@ -160,15 +169,20 @@ struct JournalEntryView: View {
             }
             .background(Color(red: 0.97, green: 0.97, blue: 0.97).ignoresSafeArea())
             .navigationBarHidden(true)
+            .alert("Journal Saved!\nDetected Mood: \(detectedMood)", isPresented: $showSavedAlert) {
+                Button("OK", role: .cancel) { }
+            }
         }
     }
 
     func saveJournalText() {
+        detectedMood = MoodAnalyzer.analyzeMood(from: journalText)
         UserDefaults.standard.set(journalText, forKey: "journalText")
         print("Journal text saved!")
+        print("Detected Mood: \(detectedMood)")
 
-        // Clear journal text for next entry
         journalText = ""
+        showSavedAlert = true
     }
 }
 
