@@ -92,9 +92,9 @@ struct JournalEntryView: View {
                                 }
 
                             if !detectedMood.isEmpty {
-                                Text("Detected Mood: \(detectedMood)")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundColor(.gray)
+                                Text("Your Mood is: \(detectedMood)")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundColor(.black)
                                     .padding(.top, 8)
                             }
                         }
