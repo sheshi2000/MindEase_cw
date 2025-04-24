@@ -8,45 +8,48 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showLogin = false
+    
     var body: some View {
-        ZStack {
-            // Background color
-            Color(red: 167/255, green: 160/255, blue: 255/255)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 20) {
-                // Centered image
-                Spacer().frame(height: 60)
-                Image("Image") // Replace with your own image name
-                
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                     .padding(.bottom, 10)
-                
-                     .frame(maxWidth: .infinity)
-                        .padding()
-                                 // This moves the whole group up from vertical center
-                        .offset(y: -80)
-                // First line of text - larger font
-                
-                
-                Text("MindEase")
-                    .font(.system(size: 34, weight: .bold))
-                 .foregroundColor(.black)
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
-                    .offset(y: -80)
-                // Second line of text - smaller font
-                Text("Gain insights into your emotional patterns")
-                   .font(.custom("Reem Kufi", size: 20))
-                  .foregroundColor(.black)
-                    .foregroundColor(.black)
-                    .offset(y: -80)
+        Group {
+            if showLogin {
+                LoginView()
+            } else {
+                ZStack {
+                    // Background color
+                    Color(red: 167/255, green: 160/255, blue: 255/255)
+                        .ignoresSafeArea()
+                    
+                    VStack(spacing: 20) {
+                        Spacer().frame(height: 60)
+                        
+                        Image("Image")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .padding(.bottom, 10)
+                            .offset(y: -80)
+
+                        Text("MindEase")
+                            .font(.system(size: 34, weight: .bold))
+                            .foregroundColor(.black)
+                            .offset(y: -80)
+
+                        Text("Gain insights into your emotional patterns")
+                            .font(.custom("Reem Kufi", size: 20))
+                            .foregroundColor(.black)
+                            .offset(y: -80)
+                    }
+                    .padding()
+                }
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        withAnimation {
+                            showLogin = true
+                        }
+                    }
+                }
             }
-            
-            
-            .padding()
         }
     }
 }
@@ -54,4 +57,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-

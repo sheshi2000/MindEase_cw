@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		390C90142DBA17A200C8DBE7 /* FirebaseAuthInterop.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390C900F2DBA17A200C8DBE7 /* FirebaseAuthInterop.xcframework */; };
+		390C90152DBA17A200C8DBE7 /* FirebaseAppCheckInterop.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390C900D2DBA17A200C8DBE7 /* FirebaseAppCheckInterop.xcframework */; };
+		390C90162DBA17A200C8DBE7 /* RecaptchaInterop.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390C90122DBA17A200C8DBE7 /* RecaptchaInterop.xcframework */; };
+		390C90172DBA17A200C8DBE7 /* GTMSessionFetcher.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390C90112DBA17A200C8DBE7 /* GTMSessionFetcher.xcframework */; };
+		390C90182DBA17A200C8DBE7 /* FirebaseAuth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390C900E2DBA17A200C8DBE7 /* FirebaseAuth.xcframework */; };
+		390C90192DBA17A200C8DBE7 /* FirebaseCoreExtension.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390C90102DBA17A200C8DBE7 /* FirebaseCoreExtension.xcframework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		392B6B9C2DB5FBA500C028B8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +33,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		390C900D2DBA17A200C8DBE7 /* FirebaseAppCheckInterop.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EQHXZ8M8AV:Google LLC"; lastKnownFileType = wrapper.xcframework; path = FirebaseAppCheckInterop.xcframework; sourceTree = "<group>"; };
+		390C900E2DBA17A200C8DBE7 /* FirebaseAuth.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EQHXZ8M8AV:Google LLC"; lastKnownFileType = wrapper.xcframework; path = FirebaseAuth.xcframework; sourceTree = "<group>"; };
+		390C900F2DBA17A200C8DBE7 /* FirebaseAuthInterop.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EQHXZ8M8AV:Google LLC"; lastKnownFileType = wrapper.xcframework; path = FirebaseAuthInterop.xcframework; sourceTree = "<group>"; };
+		390C90102DBA17A200C8DBE7 /* FirebaseCoreExtension.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EQHXZ8M8AV:Google LLC"; lastKnownFileType = wrapper.xcframework; path = FirebaseCoreExtension.xcframework; sourceTree = "<group>"; };
+		390C90112DBA17A200C8DBE7 /* GTMSessionFetcher.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EQHXZ8M8AV:Google LLC"; lastKnownFileType = wrapper.xcframework; path = GTMSessionFetcher.xcframework; sourceTree = "<group>"; };
+		390C90122DBA17A200C8DBE7 /* RecaptchaInterop.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:EQHXZ8M8AV:Google LLC"; lastKnownFileType = wrapper.xcframework; path = RecaptchaInterop.xcframework; sourceTree = "<group>"; };
 		392B6B8B2DB5FBA400C028B8 /* MindEase_cw.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MindEase_cw.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		392B6B9B2DB5FBA500C028B8 /* MindEase_cwTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MindEase_cwTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		392B6BA52DB5FBA500C028B8 /* MindEase_cwUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MindEase_cwUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +67,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				390C90142DBA17A200C8DBE7 /* FirebaseAuthInterop.xcframework in Frameworks */,
+				390C90152DBA17A200C8DBE7 /* FirebaseAppCheckInterop.xcframework in Frameworks */,
+				390C90162DBA17A200C8DBE7 /* RecaptchaInterop.xcframework in Frameworks */,
+				390C90172DBA17A200C8DBE7 /* GTMSessionFetcher.xcframework in Frameworks */,
+				390C90182DBA17A200C8DBE7 /* FirebaseAuth.xcframework in Frameworks */,
+				390C90192DBA17A200C8DBE7 /* FirebaseCoreExtension.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +93,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		390C90132DBA17A200C8DBE7 /* FirebaseAuth */ = {
+			isa = PBXGroup;
+			children = (
+				390C900D2DBA17A200C8DBE7 /* FirebaseAppCheckInterop.xcframework */,
+				390C900E2DBA17A200C8DBE7 /* FirebaseAuth.xcframework */,
+				390C900F2DBA17A200C8DBE7 /* FirebaseAuthInterop.xcframework */,
+				390C90102DBA17A200C8DBE7 /* FirebaseCoreExtension.xcframework */,
+				390C90112DBA17A200C8DBE7 /* GTMSessionFetcher.xcframework */,
+				390C90122DBA17A200C8DBE7 /* RecaptchaInterop.xcframework */,
+			);
+			path = FirebaseAuth;
+			sourceTree = "<group>";
+		};
 		392B6B822DB5FBA400C028B8 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +113,7 @@
 				392B6B9E2DB5FBA500C028B8 /* MindEase_cwTests */,
 				392B6BA82DB5FBA500C028B8 /* MindEase_cwUITests */,
 				392B6B8C2DB5FBA400C028B8 /* Products */,
+				390C90132DBA17A200C8DBE7 /* FirebaseAuth */,
 			);
 			sourceTree = "<group>";
 		};
@@ -111,8 +146,6 @@
 				392B6B8D2DB5FBA400C028B8 /* MindEase_cw */,
 			);
 			name = MindEase_cw;
-			packageProductDependencies = (
-			);
 			productName = MindEase_cw;
 			productReference = 392B6B8B2DB5FBA400C028B8 /* MindEase_cw.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +167,6 @@
 				392B6B9E2DB5FBA500C028B8 /* MindEase_cwTests */,
 			);
 			name = MindEase_cwTests;
-			packageProductDependencies = (
-			);
 			productName = MindEase_cwTests;
 			productReference = 392B6B9B2DB5FBA500C028B8 /* MindEase_cwTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +188,6 @@
 				392B6BA82DB5FBA500C028B8 /* MindEase_cwUITests */,
 			);
 			name = MindEase_cwUITests;
-			packageProductDependencies = (
-			);
 			productName = MindEase_cwUITests;
 			productReference = 392B6BA52DB5FBA500C028B8 /* MindEase_cwUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -396,6 +425,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MindEase_cw/Preview Content\"";
+				DEVELOPMENT_TEAM = 4U8FJ24YC2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -424,6 +454,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MindEase_cw/Preview Content\"";
+				DEVELOPMENT_TEAM = 4U8FJ24YC2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
