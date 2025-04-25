@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct RegistrationView: View {
     @State private var firstName = ""
@@ -16,8 +18,9 @@ struct RegistrationView: View {
     @State private var password = ""
     @State private var confirmPassword = ""
     
-    @State private var navigateToLoginView = false // State to control navigation
+    @State private var navigateToHomeView = false // State to control navigation
     @State private var showErrorMessage = false // State for showing error message
+    @State private var errorMessage = "" // Error message string
 
     var body: some View {
         NavigationView {
@@ -59,7 +62,7 @@ struct RegistrationView: View {
 
                             // Show error message if passwords don't match
                             if showErrorMessage {
-                                Text("Passwords do not match")
+                                Text(errorMessage)
                                     .foregroundColor(.red)
                                     .font(.subheadline)
                                     .padding(.horizontal)
@@ -93,7 +96,7 @@ struct RegistrationView: View {
             .ignoresSafeArea()
             .navigationBarTitleDisplayMode(.inline) // Makes the title inline
             .navigationBarItems(leading: Button(action: {
-                navigateToLoginView = true // Trigger navigation to LoginView
+                // Optional: Add a back button to navigate to a previous screen
             }) {
                 Image(systemName: "chevron.backward") // Custom icon for back
                     .foregroundColor(.black) // Black back icon
@@ -101,7 +104,7 @@ struct RegistrationView: View {
                     .offset(y: 15)
             })
             .background(
-                NavigationLink("", destination: LoginView(), isActive: $navigateToLoginView) // Programmatically navigate to LoginView
+                NavigationLink("", destination: HomeView(), isActive: $navigateToHomeView) // Programmatically navigate to HomeView
                     .hidden()
             )
         }
@@ -110,10 +113,44 @@ struct RegistrationView: View {
     private func handleSignUp() {
         // Check if passwords match
         if password != confirmPassword {
+            errorMessage = "Passwords do not match"
             showErrorMessage = true
-        } else {
-            showErrorMessage = false
-            // Handle registration logic here (e.g., API call to create user)
+            return
+        }
+
+        print(email);
+        print(password);
+        // Firebase Authentication - Create a new user
+            Auth.auth().createUser(withEmail: email, password: password) { result, error in
+                if let error = error {
+                    errorMessage = error.localizedDescription
+                    showErrorMessage = true
+                    return
+                }
+
+            guard let uid = result?.user.uid else {
+                errorMessage = "Failed to retrieve user ID"
+                showErrorMessage = true
+                return
+            }
+
+            // Store additional user info in Firestore
+            let db = Firestore.firestore()
+            db.collection("users").document(uid).setData([
+                "firstName": firstName,
+                "lastName": lastName,
+                "email": email,
+                "dateOfBirth": dateOfBirth,
+                "createdAt": Timestamp(date: Date())
+            ]) { error in
+                if let error = error {
+                    errorMessage = "Failed to save user data: \(error.localizedDescription)"
+                    showErrorMessage = true
+                } else {
+                    // Successful registration and data saving
+                    navigateToHomeView = true // Navigate to HomeView
+                }
+            }
         }
     }
 }
@@ -147,6 +184,7 @@ struct CustomSecureField: View {
             )
     }
 }
+
 
 struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {

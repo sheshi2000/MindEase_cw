@@ -18,6 +18,7 @@ class MoodAnalyzer {
 
         if let scoreString = sentiment?.rawValue,
            let score = Double(scoreString) {
+            
             if score > 0.1 {
                 return "Positive 😊"
             } else if score < -0.1 {

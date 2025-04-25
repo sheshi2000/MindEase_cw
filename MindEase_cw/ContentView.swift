@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct ContentView: View {
     @State private var showLogin = false
+    init() {
+            FirebaseApp.configure() // Ensure Firebase is configured here
+        }
     
     var body: some View {
         Group {

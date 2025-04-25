@@ -4,12 +4,12 @@
 //
 //  Created by Sheshami 029 on 2025-04-21.
 //
-import Foundation
 import SwiftUI
+import FirebaseFirestore
 
 struct JournalEntryView: View {
     @State private var journalText = ""
-    @State private var detectedMood = ""
+    @State private var detectedMood = "Unknown" // Default mood is "Unknown"
     @State private var selectedTab: String = "plus.circle.fill"
     @State private var isEditing: Bool = false
     @State private var hasTextChanged: Bool = false
@@ -22,6 +22,8 @@ struct JournalEntryView: View {
     @State private var navigateToMotivation = false
     @State private var navigateToInsight = false
 
+    @State private var currentDate: String = "" // State variable for the current date
+    
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -52,7 +54,7 @@ struct JournalEntryView: View {
 
                         // Date & Done Button
                         HStack {
-                            Text("Mon, Mar 24, 2025")
+                            Text(currentDate) // Use the dynamic current date
                                 .font(.system(size: 20, weight: .semibold))
                                 .foregroundColor(Color(red: 0.18, green: 0.18, blue: 0.18))
 
@@ -172,17 +174,40 @@ struct JournalEntryView: View {
             .alert("Journal Saved!\nDetected Mood: \(detectedMood)", isPresented: $showSavedAlert) {
                 Button("OK", role: .cancel) { }
             }
+            .onAppear {
+                // Set current date when the view appears
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "EEE, MMM d, yyyy"
+                currentDate = dateFormatter.string(from: Date())
+            }
         }
     }
 
+    // Save to Firebase (without NLP mood detection)
     func saveJournalText() {
-        detectedMood = MoodAnalyzer.analyzeMood(from: journalText)
-        UserDefaults.standard.set(journalText, forKey: "journalText")
-        print("Journal text saved!")
-        print("Detected Mood: \(detectedMood)")
+        // Using "Unknown" for mood since NLP is not available
+        detectedMood = "Unknown"
 
-        journalText = ""
-        showSavedAlert = true
+        let db = Firestore.firestore()
+        
+        // Prepare the journal data
+        let journalData: [String: Any] = [
+            "text": journalText,
+            "mood": detectedMood,
+            "timestamp": Timestamp(date: Date())
+        ]
+
+        // Save the journal entry to Firestore
+        db.collection("journalEntries").addDocument(data: journalData) { error in
+            if let error = error {
+                print("Error saving journal: \(error.localizedDescription)")
+            } else {
+                print("Journal saved to Firestore!")
+                showSavedAlert = true
+                journalText = ""
+                hasTextChanged = false
+            }
+        }
     }
 }
 

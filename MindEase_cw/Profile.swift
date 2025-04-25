@@ -11,7 +11,7 @@ struct EditProfileView: View {
     @State private var selectedTab: String? = "list.bullet"
     @State private var path = NavigationPath()
 
-    @State private var firstName = "Harry"
+    @State private var fullName = "Harry"
     @State private var lastName = "Styles"
     @State private var userName = "Harry"
     @State private var email = "Harrystyles02@gmail.com"
@@ -159,7 +159,7 @@ struct EditProfileView: View {
 
                 VStack(spacing: 15) {
                     Group {
-                        field(title: "First Name", text: $firstName)
+                        field(title: "Full Name", text: $fullName)
                         field(title: "Last Name", text: $lastName)
                         field(title: "User Name", text: $userName)
                         field(title: "Email Address", text: $email, keyboard: .emailAddress)

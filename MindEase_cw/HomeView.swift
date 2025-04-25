@@ -14,172 +14,195 @@ struct HomeView: View {
     @State private var navigateToInsight = false
     @State private var navigateToProfile = false
     @State private var chartPeriod: String = "Weekly"
+    @State private var selectedMoodEmoji: String? = nil
 
     var body: some View {
-        VStack(spacing: 20) {
-            // Header
-            VStack(spacing: 8) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        HStack(spacing: 4) {
-                            Text("Hello, Harry")
-                                .font(.system(size: 28, weight: .bold))
-                                .foregroundColor(.black)
-                            Text("👋")
+        ZStack {
+            VStack(spacing: 20) {
+                // Header
+                VStack(spacing: 8) {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            HStack(spacing: 4) {
+                                Text("Hello, Harry")
+                                    .font(.system(size: 28, weight: .bold))
+                                    .foregroundColor(.black)
+                                Text("👋")
+                            }
+                            Text("Your well-being journey starts here.")
+                                .font(.subheadline)
+                                .foregroundColor(.black.opacity(0.7))
                         }
-                        Text("Your well-being journey starts here.")
-                            .font(.subheadline)
-                            .foregroundColor(.black.opacity(0.7))
+                        Spacer()
+                        Button(action: {
+                            navigateToProfile = true
+                        }) {
+                            Image("profile 1")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .clipShape(Circle())
+                        }
+                        .offset(x: -10)
                     }
-                    Spacer()
-                    Button(action: {
-                        navigateToProfile = true
-                    }) {
-                        Image("profile 1")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
+                    .padding(.horizontal)
+                    .padding(.top, 110)
+                    .offset(y: -12)
+                    .offset(x: 6)
+                }
+
+                // Motivational Quote
+                HStack {
+                    Image("flower")
+                    Text("Every storm runs out of rain. Hold on, brighter days are coming!")
+                        .font(.system(size: 18, weight: .medium))
+                        .multilineTextAlignment(.leading)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, minHeight: 80)
+                .background(Color(red: 248/255, green: 226/255, blue: 255/255))
+                .cornerRadius(12)
+                .padding(.horizontal)
+
+                // Emoji Mood Selector
+                HStack(spacing: 16) {
+                    ForEach(["Happy", "Sad", "Bored", "Tired", "Angry", "Stressed"], id: \.self) { mood in
+                        VStack {
+                            Spacer().frame(height: 10)
+                            Text(emoji(for: mood))
+                                .font(.system(size: 35))
+                                .onTapGesture {
+                                    selectedMoodEmoji = emoji(for: mood)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                        withAnimation {
+                                            selectedMoodEmoji = nil
+                                        }
+                                    }
+                                }
+                            Text(mood)
+                                .font(.caption)
+                        }
                     }
-                    .offset(x:-10)
                 }
                 .padding(.horizontal)
-                .padding(.top, 110)
-                .offset(y: -12)
-                .offset(x:6)
-            }
 
-            // Motivational Quote
-            HStack {
-                Image("flower")
-                Text("Every storm runs out of rain. Hold on, brighter days are coming!")
-                    .font(.system(size: 18, weight: .medium))
-                    .multilineTextAlignment(.leading)
-            }
-            .padding()
-            .frame(maxWidth: .infinity, minHeight: 80)
-            .background(Color(red: 248/255, green: 226/255, blue: 255/255))
-            .cornerRadius(12)
-            .padding(.horizontal)
+                Spacer().frame(height: 20)
 
-            // Emoji Mood Selector
-            HStack(spacing: 16) {
-                ForEach(["Happy", "Sad", "Bored", "Tired", "Angry", "Stressed"], id: \.self) { mood in
-                    VStack {
-                        Spacer().frame(height: 10)
-                        Text(emoji(for: mood))
-                            .font(.system(size: 35))
-                        Text(mood)
-                            .font(.caption)
+                // Mood Chart
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Mood Chart")
+                            .font(.system(size: 20, weight: .medium))
+
+                        Spacer()
+
+                        Menu {
+                            Button(action: { chartPeriod = "Weekly" }) {
+                                Text("Weekly").foregroundColor(.black)
+                            }
+                            Button(action: { chartPeriod = "Monthly" }) {
+                                Text("Monthly").foregroundColor(.black)
+                            }
+                        } label: {
+                            HStack {
+                                Text(chartPeriod).foregroundColor(.black)
+                                Image(systemName: "chevron.down")
+                                    .foregroundColor(.black)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.white.opacity(0.3))
+                            .cornerRadius(10)
+                        }
                     }
+                    .padding(.bottom, 15)
+
+                    HStack(alignment: .bottom, spacing: 20) {
+                        ForEach(chartData) { item in
+                            VStack {
+                                Spacer()
+                                Rectangle()
+                                    .fill(item.color)
+                                    .frame(width: 32, height: CGFloat(item.value) * 24)
+                                    .cornerRadius(4)
+
+                                Text(item.label)
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundColor(.black)
+                                    .padding(.top, 10)
+                            }
+                        }
+                    }
+                    .frame(height: 220)
                 }
-            }
-            .padding(.horizontal)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(.systemGray6))
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
+                )
+                .padding(.horizontal)
+                .padding(.top, 10)
 
-            Spacer().frame(height: 20)
+                Spacer()
 
-            // Mood Chart
-            VStack(alignment: .leading) {
+                // Bottom Navigation
                 HStack {
-                    Text("Mood Chart")
-                        .font(.system(size: 20, weight: .medium))
+                    ForEach(bottomIcons, id: \.self) { icon in
+                        Spacer()
+                        VStack(spacing: 4) {
+                            Image(systemName: icon)
+                                .font(.system(size: icon == "plus.circle.fill" ? 55 : 22))
+                                .foregroundColor(icon == "plus.circle.fill" ? Color(red: 167/255, green: 160/255, blue: 255/255) : (icon == selectedTab ? .black : .gray))
 
-                    Spacer()
-
-                    Menu {
-                        Button(action: { chartPeriod = "Weekly" }) {
-                            Text("Weekly").foregroundColor(.black)
+                            if icon != "plus.circle.fill" {
+                                Circle()
+                                    .fill(icon == selectedTab ? .black : .clear)
+                                    .frame(width: 6, height: 6)
+                                    .offset(y: -4)
+                            }
                         }
-                        Button(action: { chartPeriod = "Monthly" }) {
-                            Text("Monthly").foregroundColor(.black)
+                        .onTapGesture {
+                            selectedTab = icon
+                            switch icon {
+                            case "list.bullet": navigateToJournal = true
+                            case "star": navigateToMotivational = true
+                            case "chart.bar": navigateToInsight = true
+                            case "plus.circle.fill": navigateToNewJournal = true
+                            default: break
+                            }
                         }
-                    } label: {
-                        HStack {
-                            Text(chartPeriod).foregroundColor(.black)
-                            Image(systemName: "chevron.down")
-                                .foregroundColor(.black)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color.white.opacity(0.3))
-                        .cornerRadius(10)
+                        Spacer()
                     }
                 }
-                .padding(.bottom, 15)
+                .padding()
+                .background(Color.white)
+                .clipShape(Capsule())
+                .shadow(radius: 4)
+                .padding(.horizontal)
 
-                HStack(alignment: .bottom, spacing: 20) {
-                    ForEach(chartData) { item in
-                        VStack {
-                            Spacer()
-                            Rectangle()
-                                .fill(item.color)
-                                .frame(width: 32, height: CGFloat(item.value) * 24)
-                                .cornerRadius(4)
-
-                            Text(item.label)
-                                .font(.system(size: 13, weight: .medium))
-                                .foregroundColor(.black)
-                                .padding(.top, 10)
-                        }
-                    }
-                }
-                .frame(height: 220)
+                // Navigation Links
+                NavigationLink(destination: HistoryJournalView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToJournal) { EmptyView() }.hidden()
+                NavigationLink(destination: JournalEntryView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToNewJournal) { EmptyView() }.hidden()
+                NavigationLink(destination: MotivationalView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToMotivational) { EmptyView() }.hidden()
+                NavigationLink(destination: InsightView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToInsight) { EmptyView() }.hidden()
+                NavigationLink(destination: EditProfileView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToProfile) { EmptyView() }.hidden()
             }
-            .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemGray6))
-                    .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
-            )
-            .padding(.horizontal)
-            .padding(.top, 10)
+            .background(Color.white.ignoresSafeArea())
+            .navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
 
-            Spacer()
-
-            // Bottom Navigation
-            HStack {
-                ForEach(bottomIcons, id: \.self) { icon in
-                    Spacer()
-                    VStack(spacing: 4) {
-                        Image(systemName: icon)
-                            .font(.system(size: icon == "plus.circle.fill" ? 55 : 22))
-                            .foregroundColor(icon == "plus.circle.fill" ? Color(red: 167/255, green: 160/255, blue: 255/255) : (icon == selectedTab ? .black : .gray))
-
-                        if icon != "plus.circle.fill" {
-                            Circle()
-                                .fill(icon == selectedTab ? .black : .clear)
-                                .frame(width: 6, height: 6)
-                                .offset(y: -4)
-                        }
-                    }
-                    .onTapGesture {
-                        selectedTab = icon
-                        switch icon {
-                        case "list.bullet": navigateToJournal = true
-                        case "star": navigateToMotivational = true
-                        case "chart.bar": navigateToInsight = true
-                        case "plus.circle.fill": navigateToNewJournal = true
-                        default: break
-                        }
-                    }
-                    Spacer()
+            // Emoji Overlay
+            if let emoji = selectedMoodEmoji {
+                ZStack {
+                    Color.black.opacity(0.2).ignoresSafeArea()
+                    Text(emoji)
+                        .font(.system(size: 170))
+                        .transition(.opacity)
+                        .opacity(selectedMoodEmoji == nil ? 0 : 1)
                 }
+                .animation(.easeInOut(duration: 0.5), value: selectedMoodEmoji)
             }
-            .padding()
-            .background(Color.white)
-            .clipShape(Capsule())
-            .shadow(radius: 4)
-            .padding(.horizontal)
-
-            // Navigation Links
-            NavigationLink(destination: HistoryJournalView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToJournal) { EmptyView() }.hidden()
-            NavigationLink(destination: JournalEntryView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToNewJournal) { EmptyView() }.hidden()
-            NavigationLink(destination: MotivationalView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToMotivational) { EmptyView() }.hidden()
-            NavigationLink(destination: InsightView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToInsight) { EmptyView() }.hidden()
-            NavigationLink(destination: EditProfileView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToProfile) { EmptyView() }.hidden()
         }
-        .background(Color.white.ignoresSafeArea())
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
     }
 
     struct ChartItem: Identifiable {

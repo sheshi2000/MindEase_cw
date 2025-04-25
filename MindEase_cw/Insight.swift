@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct InsightView: View {
     
     
     
     
-    
+
     
     @Environment(\.presentationMode) var presentationMode
     @State private var selectedTab: String = "chart.bar"
@@ -156,30 +157,119 @@ struct InsightView: View {
 }
 
 struct CalendarView: View {
+    
     let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    let moodEmojis = ["😄", "😐", "😭", "😠", "😄", "😩", "😪"]
+    let moodEmojis = [
+        "happy": "😄",
+        "neutral": "😐",
+        "sad": "😭",
+        "angry": "😠",
+        "excited": "😄",
+        "stressed": "😩",
+        "tired": "😪",
+        "unknown": "hi"  // Added "unknown"
+    ]
+
+
+    @State private var moodForDays: [Int: String] = [:] // Dictionary to hold mood for each day
+    @State private var isLoading = true // Tracks if data is still loading
 
     var body: some View {
         VStack(alignment: .leading) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 16) {
-                ForEach(days, id: \.self) { day in
-                    Text(day)
-                        .font(.caption)
-                        .bold()
+            if isLoading {
+                Text("Loading...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 16) {
+                    // Display day headers (Sun, Mon, etc.)
+                    ForEach(days, id: \.self) { day in
+                        Text(day)
+                            .font(.caption)
+                            .bold()
+                            .frame(maxWidth: .infinity)
+                    }
+
+                    // Display days of the month with corresponding mood emojis
+                    ForEach(1...30, id: \.self) { day in
+                        VStack {
+                            Text("\(day)")
+                                .font(.caption2)
+                            Text(moodForDays[day] ?? "❓") // Display mood emoji or a placeholder
+                        }
                         .frame(maxWidth: .infinity)
+                    }
+                    
+                
+                }
+                
+                .padding(.horizontal)
+            }
+        }
+        .onAppear {
+            fetchMoodEntries()
+        }
+    }
+    
+    // Function to fetch mood data for the current month
+    private func fetchMoodEntries() {
+        let db = FirestoreService.shared
+        let startDate = getStartOfMonth()
+        let endDate = getEndOfMonth()
+
+        db.fetchJournalEntries(from: startDate, to: endDate) { result in
+            switch result {
+            case .success(let journalEntries):
+                var moodData: [Int: String] = [:]
+                for entry in journalEntries {
+                    let day = getDayFromTimestamp(entry.timestamp)
+                    
+                    // Debugging: Print the mood value to see what it is
+                    print("Mood for day \(day): \(entry.mood)")  // Add this line
+                    
+                    // Normalize mood string and get corresponding emoji
+                    let normalizedMood = entry.mood.lowercased()
+                    let moodEmoji = moodEmojis[normalizedMood] ?? "❓"
+                    moodData[day] = moodEmoji
                 }
 
-                ForEach(1...30, id: \.self) { day in
-                    VStack {
-                        Text("\(day)")
-                            .font(.caption2)
-                        Text(moodEmojis[day % moodEmojis.count])
-                    }
-                    .frame(maxWidth: .infinity)
+                DispatchQueue.main.async {
+                    self.moodForDays = moodData
+                    self.isLoading = false
+                }
+            case .failure(let error):
+                print("Error fetching mood entries: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
                 }
             }
-            .padding(.horizontal)
         }
+    }
+
+
+
+    
+    // Helper function to get the start of the month
+    private func getStartOfMonth() -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: Date())
+        return calendar.date(from: components) ?? Date()
+    }
+    
+    // Helper function to get the end of the month
+    private func getEndOfMonth() -> Date {
+        let calendar = Calendar.current
+        if let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())),
+           let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth) {
+            return endOfMonth
+        }
+        return Date()
+    }
+    
+    // Helper function to extract the day from a Firestore Timestamp
+    private func getDayFromTimestamp(_ timestamp: Timestamp) -> Int {
+        let date = timestamp.dateValue()
+        let calendar = Calendar.current
+        return calendar.component(.day, from: date)
     }
 }
 
