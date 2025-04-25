@@ -63,7 +63,7 @@ struct HomeView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
 
-                // Emoji Mood Selector
+           
                 HStack(spacing: 16) {
                     ForEach(["Happy", "Sad", "Bored", "Tired", "Angry", "Stressed"], id: \.self) { mood in
                         VStack {
@@ -180,7 +180,7 @@ struct HomeView: View {
                 .shadow(radius: 4)
                 .padding(.horizontal)
 
-                // Navigation Links
+                
                 NavigationLink(destination: HistoryJournalView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToJournal) { EmptyView() }.hidden()
                 NavigationLink(destination: JournalEntryView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToNewJournal) { EmptyView() }.hidden()
                 NavigationLink(destination: MotivationalView().navigationBarBackButtonHidden(true).navigationBarHidden(true), isActive: $navigateToMotivational) { EmptyView() }.hidden()
@@ -191,7 +191,7 @@ struct HomeView: View {
             .navigationBarBackButtonHidden(true)
             .navigationBarHidden(true)
 
-            // Emoji Overlay
+          
             if let emoji = selectedMoodEmoji {
                 ZStack {
                     Color.black.opacity(0.2).ignoresSafeArea()

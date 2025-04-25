@@ -20,7 +20,7 @@ class FirestoreService {
             "createdAt": Timestamp(date: Date())
         ]
         
-        // Save the user profile data in the 'users' collection, using the user's UID as the document ID
+       
         db.collection("users").document(uid).setData(userData) { error in
             if let error = error {
                 completion(.failure(error))
@@ -30,7 +30,7 @@ class FirestoreService {
         }
     }
 
-    // Save Journal Entry Data
+  
     func saveJournalEntry(userId: String, text: String, mood: String, completion: @escaping (Result<Void, Error>) -> Void) {
         let entryData: [String: Any] = [
             "userId": userId,
@@ -39,7 +39,7 @@ class FirestoreService {
             "timestamp": Timestamp()
         ]
 
-        // Save the journal entry data in the 'journals' collection
+
         db.collection("journals").addDocument(data: entryData) { error in
             if let error = error {
                 completion(.failure(error))

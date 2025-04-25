@@ -9,14 +9,14 @@ import SwiftUI
 
 struct MotivationalView: View {
     private let bottomIcons: [String] = ["house.fill", "list.bullet", "plus.circle.fill", "star", "chart.bar"]
-    @State private var selectedTab: String = "star" // Current screen
+    @State private var selectedTab: String = "star"
 
     @State private var navigateToHome = false
     @State private var navigateToJournal = false
     @State private var navigateToNewJournal = false
     @State private var navigateToInsight = false
 
-    // Array of quotes and corresponding background colors
+    
     private let quotes = [
         ("Your mind is a powerful thing. When you fill it with positive thoughts, your life will start to change.", "- Unknown", Color(red: 216/255, green: 191/255, blue: 216/255)), // Thistle
         ("Believe you can and you're halfway there.", "- Theodore Roosevelt", Color(red: 230/255, green: 230/255, blue: 250/255)), // Lavender
@@ -32,7 +32,7 @@ struct MotivationalView: View {
             Color.white.ignoresSafeArea()
 
             VStack(spacing: 15) {
-                // Custom Navigation Bar
+               
                 HStack {
                     Button(action: {
                         self.presentationMode.wrappedValue.dismiss()
@@ -55,7 +55,7 @@ struct MotivationalView: View {
 
                 Spacer()
 
-                // Quote Card with swipe functionality
+               
                 TabView {
                     ForEach(quotes, id: \.0) { quote in
                         VStack(spacing: 20) {
@@ -87,7 +87,7 @@ struct MotivationalView: View {
 
                 Spacer()
 
-                // Cancel Button
+            
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
                 }) {
@@ -142,7 +142,7 @@ struct MotivationalView: View {
             .shadow(radius: 4)
             .padding(.horizontal)
 
-            // Navigation Links
+          
             NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true), isActive: $navigateToHome) { EmptyView() }.hidden()
             NavigationLink(destination: HistoryJournalView().navigationBarBackButtonHidden(true), isActive: $navigateToJournal) { EmptyView() }.hidden()
             NavigationLink(destination: JournalEntryView().navigationBarBackButtonHidden(true), isActive: $navigateToNewJournal) { EmptyView() }.hidden()

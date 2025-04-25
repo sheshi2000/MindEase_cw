@@ -6,10 +6,11 @@
 //
 import SwiftUI
 import FirebaseFirestore
+import CoreML
 
 struct JournalEntryView: View {
     @State private var journalText = ""
-    @State private var detectedMood = "Unknown" // Default mood is "Unknown"
+    @State private var detectedMood = "Unknown"
     @State private var selectedTab: String = "plus.circle.fill"
     @State private var isEditing: Bool = false
     @State private var hasTextChanged: Bool = false
@@ -22,8 +23,8 @@ struct JournalEntryView: View {
     @State private var navigateToMotivation = false
     @State private var navigateToInsight = false
 
-    @State private var currentDate: String = "" // State variable for the current date
-    
+    @State private var currentDate: String = ""
+
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -31,7 +32,6 @@ struct JournalEntryView: View {
             ZStack(alignment: .bottom) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        // Top Bar
                         HStack {
                             Button(action: {
                                 self.presentationMode.wrappedValue.dismiss()
@@ -52,9 +52,8 @@ struct JournalEntryView: View {
                         }
                         .padding(.top, 20)
 
-                        // Date & Done Button
                         HStack {
-                            Text(currentDate) // Use the dynamic current date
+                            Text(currentDate)
                                 .font(.system(size: 20, weight: .semibold))
                                 .foregroundColor(Color(red: 0.18, green: 0.18, blue: 0.18))
 
@@ -77,7 +76,6 @@ struct JournalEntryView: View {
                         }
                         .padding(.horizontal)
 
-                        // Journal Content
                         VStack(alignment: .leading, spacing: 16) {
                             TextEditor(text: $journalText)
                                 .font(.system(size: 18))
@@ -91,6 +89,9 @@ struct JournalEntryView: View {
                                 .padding(.bottom, 40)
                                 .onChange(of: journalText) { newValue in
                                     hasTextChanged = !newValue.isEmpty
+                                    if newValue.count > 5 {
+                                        detectMood(from: newValue)
+                                    }
                                 }
 
                             if !detectedMood.isEmpty {
@@ -107,7 +108,6 @@ struct JournalEntryView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                // Floating Edit Button
                 VStack {
                     Spacer()
                     HStack {
@@ -128,7 +128,6 @@ struct JournalEntryView: View {
                     }
                 }
 
-                // Bottom Navigation Bar
                 HStack {
                     ForEach(bottomIcons, id: \.self) { icon in
                         Spacer()
@@ -163,7 +162,6 @@ struct JournalEntryView: View {
                 .shadow(radius: 4)
                 .padding(.horizontal)
 
-                // Navigation Links
                 NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true), isActive: $navigateToHome) { EmptyView() }.hidden()
                 NavigationLink(destination: HistoryJournalView().navigationBarBackButtonHidden(true), isActive: $navigateToJournal) { EmptyView() }.hidden()
                 NavigationLink(destination: MotivationalView().navigationBarBackButtonHidden(true), isActive: $navigateToMotivation) { EmptyView() }.hidden()
@@ -175,7 +173,6 @@ struct JournalEntryView: View {
                 Button("OK", role: .cancel) { }
             }
             .onAppear {
-                // Set current date when the view appears
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "EEE, MMM d, yyyy"
                 currentDate = dateFormatter.string(from: Date())
@@ -183,21 +180,15 @@ struct JournalEntryView: View {
         }
     }
 
-    // Save to Firebase (without NLP mood detection)
     func saveJournalText() {
-        // Using "Unknown" for mood since NLP is not available
-        detectedMood = "Unknown"
-
         let db = Firestore.firestore()
-        
-        // Prepare the journal data
+
         let journalData: [String: Any] = [
             "text": journalText,
             "mood": detectedMood,
             "timestamp": Timestamp(date: Date())
         ]
 
-        // Save the journal entry to Firestore
         db.collection("journalEntries").addDocument(data: journalData) { error in
             if let error = error {
                 print("Error saving journal: \(error.localizedDescription)")
@@ -207,6 +198,18 @@ struct JournalEntryView: View {
                 journalText = ""
                 hasTextChanged = false
             }
+        }
+    }
+
+    func detectMood(from text: String) {
+        do {
+            let model = try MoodDetectionModel(configuration: MLModelConfiguration())
+            let prediction = try model.prediction(text: text)
+            detectedMood = prediction.label
+            print("Predicted Mood: \(detectedMood)")
+        } catch {
+            print("Failed to predict mood: \(error.localizedDescription)")
+            detectedMood = "Unknown"
         }
     }
 }

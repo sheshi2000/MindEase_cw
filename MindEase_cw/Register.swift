@@ -18,10 +18,9 @@ struct RegistrationView: View {
     @State private var password = ""
     @State private var confirmPassword = ""
     
-    @State private var navigateToHomeView = false // State to control navigation
-    @State private var showErrorMessage = false // State for showing error message
-    @State private var errorMessage = "" // Error message string
-
+    @State private var navigateToHomeView = false
+    @State private var showErrorMessage = false
+    @State private var errorMessage = ""
     var body: some View {
         NavigationView {
             ScrollView {
@@ -46,7 +45,7 @@ struct RegistrationView: View {
 
                     ZStack {
                         VStack {
-                            // Form Fields
+                           
                             VStack(spacing: 18) {
                                 CustomTextField(placeholder: "Enter Full Name", text: $firstName)
                                 CustomTextField(placeholder: "Enter User Name", text: $lastName)
@@ -60,7 +59,7 @@ struct RegistrationView: View {
                             .padding(.horizontal)
                             .padding(.top, 25)
 
-                            // Show error message if passwords don't match
+                           
                             if showErrorMessage {
                                 Text(errorMessage)
                                     .foregroundColor(.red)
@@ -68,7 +67,7 @@ struct RegistrationView: View {
                                     .padding(.horizontal)
                             }
 
-                            // Sign Up Button
+                           
                             Button(action: handleSignUp) {
                                 Text("SIGN UP")
                                     .font(.custom("Reem Kufi", size: 18))
@@ -94,24 +93,24 @@ struct RegistrationView: View {
                 (Color(red: 167/255, green: 160/255, blue: 255/255))
             }
             .ignoresSafeArea()
-            .navigationBarTitleDisplayMode(.inline) // Makes the title inline
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button(action: {
-                // Optional: Add a back button to navigate to a previous screen
+                
             }) {
-                Image(systemName: "chevron.backward") // Custom icon for back
-                    .foregroundColor(.black) // Black back icon
-                    .font(.system(size: 20)) // Adjust the size of the icon
+                Image(systemName: "chevron.backward")
+                    .foregroundColor(.black)
+                    .font(.system(size: 20))
                     .offset(y: 15)
             })
             .background(
-                NavigationLink("", destination: HomeView(), isActive: $navigateToHomeView) // Programmatically navigate to HomeView
+                NavigationLink("", destination: HomeView(), isActive: $navigateToHomeView)
                     .hidden()
             )
         }
     }
 
     private func handleSignUp() {
-        // Check if passwords match
+        
         if password != confirmPassword {
             errorMessage = "Passwords do not match"
             showErrorMessage = true
@@ -120,7 +119,7 @@ struct RegistrationView: View {
 
         print(email);
         print(password);
-        // Firebase Authentication - Create a new user
+        
             Auth.auth().createUser(withEmail: email, password: password) { result, error in
                 if let error = error {
                     errorMessage = error.localizedDescription
@@ -147,15 +146,14 @@ struct RegistrationView: View {
                     errorMessage = "Failed to save user data: \(error.localizedDescription)"
                     showErrorMessage = true
                 } else {
-                    // Successful registration and data saving
-                    navigateToHomeView = true // Navigate to HomeView
+                   
+                    navigateToHomeView = true
                 }
             }
         }
     }
 }
 
-// Custom Text Field Component
 struct CustomTextField: View {
     var placeholder: String
     @Binding var text: String
@@ -170,7 +168,7 @@ struct CustomTextField: View {
     }
 }
 
-// Custom Secure Field Component
+
 struct CustomSecureField: View {
     var placeholder: String
     @Binding var text: String

@@ -59,7 +59,7 @@ struct HistoryJournalView: View {
                 
                 // Header Section
                 VStack(spacing: 0) {
-                    // Remove default back button (blue back button) and handle it manually
+                    
                     HStack {
                         Button(action: {
                             presentationMode.wrappedValue.dismiss()
@@ -71,16 +71,16 @@ struct HistoryJournalView: View {
                         .padding(.leading)
                         Spacer()
                     }
-                    .padding(.top, 20) // Increased space at the top for better alignment
+                    .padding(.top, 20)
 
-                    // Header Title
                     Text("Journal Entries")
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top, 10) // Adjusted padding to move it down
+                        .padding(.top, 10)
                         .offset(y:-40)
-                    // Period Selector
+                 
+                    
                     HStack(spacing: 12) {
                         ForEach(periods, id: \.self) { period in
                             Button(action: {
@@ -110,7 +110,8 @@ struct HistoryJournalView: View {
                     .padding(.horizontal)
                     .padding(.bottom, 15)
                     .offset(y:-15)
-                    // New Journal Section
+                    
+                    // Journal Section
                     VStack(alignment: .leading, spacing: 12) {
                         Text("New Journal")
                             .font(.system(size: 20, weight: .semibold))
@@ -130,7 +131,7 @@ struct HistoryJournalView: View {
                     .offset(y:-15)
                 }
                 
-                // ScrollView for Journal Entries
+               
                 ScrollView {
                     VStack(spacing: 20) {
                         // Journal Entries
@@ -163,7 +164,7 @@ struct HistoryJournalView: View {
                     .padding(.bottom, 20)
                 }
                 
-                // Bottom Navigation Bar with NavigationLinks
+                // Bottom Navigation Bar
                 HStack {
                     ForEach(bottomIcons, id: \.self) { icon in
                         Spacer()
@@ -220,7 +221,7 @@ struct HistoryJournalView: View {
                 .padding(.horizontal)
             }
             .background(Color.white.ignoresSafeArea())
-            .navigationBarBackButtonHidden(true) // Hide the default back button here
+            .navigationBarBackButtonHidden(true) 
         }
     }
 }

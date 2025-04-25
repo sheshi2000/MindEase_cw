@@ -25,7 +25,7 @@ struct InsightView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            // Top Bar with Back Button and Quote
+          
             HStack {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
@@ -52,7 +52,7 @@ struct InsightView: View {
             .padding(.horizontal)
             .padding(.top, 80)
             .offset(y: 5)
-            // Calendar Placeholder with Mood Emojis
+            
             CalendarView()
 
             // Mood Chart
@@ -122,7 +122,7 @@ struct InsightView: View {
             .shadow(radius: 4)
             .padding(.horizontal)
 
-            // Navigation Links
+         
             NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true), isActive: $navigateToHome) { EmptyView() }.hidden()
             NavigationLink(destination: HistoryJournalView().navigationBarBackButtonHidden(true), isActive: $navigateToJournal) { EmptyView() }.hidden()
             NavigationLink(destination: JournalEntryView().navigationBarBackButtonHidden(true), isActive: $navigateToNewJournal) { EmptyView() }.hidden()
@@ -131,7 +131,7 @@ struct InsightView: View {
         .background(Color.white.ignoresSafeArea())
     }
 
-    // Chart Data Structure
+
     struct ChartItem: Identifiable {
         let id = UUID()
         let label: String
@@ -167,13 +167,12 @@ struct CalendarView: View {
         "excited": "😄",
         "stressed": "😩",
         "tired": "😪",
-        "unknown": "hi"  // Added "unknown"
+        "unknown": "hi"
     ]
 
 
-    @State private var moodForDays: [Int: String] = [:] // Dictionary to hold mood for each day
-    @State private var isLoading = true // Tracks if data is still loading
-
+    @State private var moodForDays: [Int: String] = [:]
+    @State private var isLoading = true
     var body: some View {
         VStack(alignment: .leading) {
             if isLoading {
@@ -181,7 +180,7 @@ struct CalendarView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 16) {
-                    // Display day headers (Sun, Mon, etc.)
+                   
                     ForEach(days, id: \.self) { day in
                         Text(day)
                             .font(.caption)
@@ -189,12 +188,12 @@ struct CalendarView: View {
                             .frame(maxWidth: .infinity)
                     }
 
-                    // Display days of the month with corresponding mood emojis
+                    
                     ForEach(1...30, id: \.self) { day in
                         VStack {
                             Text("\(day)")
                                 .font(.caption2)
-                            Text(moodForDays[day] ?? "❓") // Display mood emoji or a placeholder
+                            Text(moodForDays[day] ?? "❓")
                         }
                         .frame(maxWidth: .infinity)
                     }
@@ -210,7 +209,7 @@ struct CalendarView: View {
         }
     }
     
-    // Function to fetch mood data for the current month
+    
     private func fetchMoodEntries() {
         let db = FirestoreService.shared
         let startDate = getStartOfMonth()
@@ -223,10 +222,10 @@ struct CalendarView: View {
                 for entry in journalEntries {
                     let day = getDayFromTimestamp(entry.timestamp)
                     
-                    // Debugging: Print the mood value to see what it is
-                    print("Mood for day \(day): \(entry.mood)")  // Add this line
                     
-                    // Normalize mood string and get corresponding emoji
+                    print("Mood for day \(day): \(entry.mood)")
+                    
+                 
                     let normalizedMood = entry.mood.lowercased()
                     let moodEmoji = moodEmojis[normalizedMood] ?? "❓"
                     moodData[day] = moodEmoji
@@ -248,14 +247,14 @@ struct CalendarView: View {
 
 
     
-    // Helper function to get the start of the month
+    
     private func getStartOfMonth() -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: Date())
         return calendar.date(from: components) ?? Date()
     }
     
-    // Helper function to get the end of the month
+  
     private func getEndOfMonth() -> Date {
         let calendar = Calendar.current
         if let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: Date())),
@@ -265,7 +264,7 @@ struct CalendarView: View {
         return Date()
     }
     
-    // Helper function to extract the day from a Firestore Timestamp
+  
     private func getDayFromTimestamp(_ timestamp: Timestamp) -> Int {
         let date = timestamp.dateValue()
         let calendar = Calendar.current

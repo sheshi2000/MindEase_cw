@@ -6,13 +6,13 @@
 //
 import SwiftUI
 import FirebaseAuth
-import LocalAuthentication // Import LocalAuthentication for Face ID
+import LocalAuthentication
 
 struct LoginView: View {
     @State private var username = ""
     @State private var password = ""
     @State private var navigateToRegistration = false
-    @State private var navigateToHome = false // Add a state variable for navigation to HomeView
+    @State private var navigateToHome = false
     @State private var showError = false
     @State private var errorMessage = ""
 
@@ -25,7 +25,7 @@ struct LoginView: View {
                 VStack(spacing: 20) {
                     Spacer()
 
-                    // Header with Logo
+                    
                     Image("Image")
                         .resizable()
                         .scaledToFit()
@@ -43,7 +43,7 @@ struct LoginView: View {
                         VStack {
                             Spacer().frame(height: 30)
 
-                            // Text Fields
+                         
                             VStack(spacing: 15) {
                                 TextField("Enter Username", text: $username)
                                     .font(.custom("Reem Kufi", size: 25))
@@ -59,7 +59,7 @@ struct LoginView: View {
                             }
                             .padding(.top, 30)
 
-                            // Show error message if login fails
+                            
                             if showError {
                                 Text(errorMessage)
                                     .foregroundColor(.red)
@@ -69,7 +69,7 @@ struct LoginView: View {
 
                             Spacer().frame(height: 55)
 
-                            // Sign In Button
+                          
                             Button(action: signIn) {
                                 Text("SIGN IN")
                                     .font(.custom("Reem Kufi", size: 18))
@@ -82,7 +82,7 @@ struct LoginView: View {
                             .padding(.horizontal, 25)
                             .padding(.top, 25)
 
-                            // Face ID
+                           
                             Button(action: useFaceID) {
                                 Text("FACE ID")
                                     .font(.custom("Reem Kufi", size: 18))
@@ -97,7 +97,6 @@ struct LoginView: View {
 
                             Spacer()
 
-                            // Footer with Navigation
                             VStack(spacing: 4) {
                                 Text("New around here?")
                                     .font(.headline)
@@ -113,7 +112,7 @@ struct LoginView: View {
                             }
                             .padding(.bottom, 35)
 
-                            // 🔁 NavigationLink inside the view for Registration
+                           
                             NavigationLink(
                                 destination: RegistrationView(),
                                 isActive: $navigateToRegistration
@@ -121,7 +120,7 @@ struct LoginView: View {
                                 EmptyView()
                             }
 
-                            // 🔁 NavigationLink inside the view for Home (when sign-in is successful)
+                          
                             NavigationLink(
                                 destination: HomeView(),
                                 isActive: $navigateToHome
@@ -139,7 +138,7 @@ struct LoginView: View {
         }
     }
 
-    // Firebase Sign In function
+
     private func signIn() {
         // Validate the username and password
         guard !username.isEmpty, !password.isEmpty else {
@@ -148,55 +147,48 @@ struct LoginView: View {
             return
         }
 
-        // Firebase login logic
+      
         Auth.auth().signIn(withEmail: username, password: password) { authResult, error in
             if let error = error {
                 showError = true
                 errorMessage = "Login failed: \(error.localizedDescription)"
             } else {
-                // Successful login, navigate to the home view
+                
                 navigateToHome = true
             }
         }
     }
 
     private func useFaceID() {
-        // Initialize the authentication context
+       
         let context = LAContext()
         var error: NSError?
 
-        // Check if the device supports Face ID or Touch ID
+        
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            // Attempt Face ID authentication
+            
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Please authenticate with Face ID") { success, authenticationError in
                 DispatchQueue.main.async {
                     if success {
-                        // Authentication was successful, sign in to Firebase
+                      
                         self.signInWithFaceID()
                     } else {
-                        // If authentication fails, show error message
+                     
                         self.showError = true
                         self.errorMessage = "Face ID authentication failed: \(authenticationError?.localizedDescription ?? "Unknown error")"
                     }
                 }
             }
         } else {
-            // If Face ID or Touch ID is not available, show an error
+         
             self.showError = true
             self.errorMessage = "Face ID/Touch ID is not available on this device."
         }
     }
 
     private func signInWithFaceID() {
-        // Perform Firebase sign-in after successful Face ID authentication
-        // You can directly sign in using FirebaseAuth if Face ID is successful,
-        // assuming that Face ID is linked to the user's credentials.
         
-        // This is a placeholder, as Firebase doesn't directly support Face ID sign-in by default.
-        // You might need to implement a custom authentication mechanism for this,
-        // or use Firebase's email/password sign-in as usual.
-
-        navigateToHome = true // Navigate to home after successful Face ID authentication
+        navigateToHome = true 
     }
 }
 

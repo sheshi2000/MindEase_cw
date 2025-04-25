@@ -11,7 +11,7 @@ import Firebase
 struct ContentView: View {
     @State private var showLogin = false
     init() {
-            FirebaseApp.configure() // Ensure Firebase is configured here
+            FirebaseApp.configure() 
         }
     
     var body: some View {

@@ -20,7 +20,7 @@ struct EditProfileView: View {
 
     @State private var scrolledDown = false
 
-    // New state for showing alert after saving changes
+    
     @State private var showSaveAlert = false
 
     var body: some View {
@@ -97,7 +97,7 @@ struct EditProfileView: View {
         }
     }
 
-    // Reusable field view
+
     private func field(title: String, text: Binding<String>, keyboard: UIKeyboardType = .default) -> some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(title)
@@ -170,7 +170,7 @@ struct EditProfileView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            // When the button is tapped, show the success alert
+                           
                             showSaveAlert = true
                         }) {
                             Text("Save Changes")
@@ -194,7 +194,7 @@ struct EditProfileView: View {
     }
 }
 
-// Scroll position preference key
+
 struct ScrollOffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
 
